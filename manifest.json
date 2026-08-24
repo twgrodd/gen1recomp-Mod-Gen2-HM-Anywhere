@@ -5,12 +5,12 @@
   "api": 2,
   "entry": "main.lua",
   "profile": "content",
-  "category": "GAMEPLAY",
+  "category": "MECHANIC",
   "games": ["gold", "silver"],
   "game_version": ">=0.2.20 <2.0.0",
   "priority": 610,
   "permissions": ["engine_internals"],
   "affects_link": false,
-  "github": "bryanthaboi/gen1recomp",
+  "github": "twgrodd/gen1recomp-Mod-Gen2-HM-Anywhere",
   "description": "Use owned Gold/Silver HMs without teaching them to a Pokémon. Adds an HM menu and preserves normal badge and field restrictions."
 }
