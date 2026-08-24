@@ -1,6 +1,11 @@
--- HM Anywhere for Pokemon Gold / Silver v2.4.0
+-- HM Anywhere for Pokémon Gold / Silver v2.8.1
 --
--- Based on the execution path proven by v1.8.0.  The important ordering is:
+-- This mod adds an HM-only field-use menu for Gold/Silver. It deliberately
+-- does not teach moves, modify the party, or change battle moves. The normal
+-- Gold/Silver badge and map/terrain checks remain in charge.
+--
+-- The field-move execution order below is intentional and has been tested
+-- against Gen1Recomp++ 0.2.24. The important ordering is:
 --   HM list closes -> queue the native field action -> close Start menu.
 -- Do not move the field-action call to a later core.update: the Gen2 menu
 -- facade is the part that successfully queues the action while Start is open.
@@ -25,12 +30,17 @@ return function(mod)
   end
 
   local function syntheticMon(move)
-    return { species="POLIWAG", id="POLIWAG", nickname="YOU", moves={{id=move}} }
+    -- The Gen 2 Fly presentation uses the field-move source species for the
+    -- flying animation. Pidgeot is used for FLY so the native effect shows a
+    -- bird. The temporary object is never inserted into the player's party or save.
+    local species = (move == "FLY") and "PIDGEOT" or "POLIWAG"
+    return { species=species, id=species, nickname="YOU", moves={{id=move}} }
   end
 
-  -- This is the part that makes the normal A-button CUT/SURF/etc. paths work
-  -- without a party user.  Vanilla remains first; the synthetic source is only
-  -- returned when the player owns the HM.
+  -- Contextual field use (for example, pressing A while facing a tree or water)
+  -- still goes through the engine's normal eligibility check. Vanilla gets
+  -- first refusal. If no party Pokémon can perform the move, we provide a
+  -- temporary field-move source when the matching HM is in the Bag.
   mod.hooks:wrap("fieldmove.eligibility", function(next, moveId, ctx)
     local mon = next(moveId, ctx)
     if mon then return mon end
@@ -41,15 +51,16 @@ return function(mod)
     return nil
   end)
 
-  -- Keep this EXACTLY on the v1.8 menu execution seam.  In particular, use the
-  -- public field-action facade before the Start menu is popped.  That facade is
-  -- what successfully queued CUT/SURF/FLASH in v1.8; calling the internal
-  -- World:useFieldMove from core.update was the regression in later versions.
+  -- Menu execution for the ordinary HMs intentionally follows the working
+  -- Gen1Recomp++ field-action path: request the action while the HM list is
+  -- closing but before the underlying Start menu is popped. The engine then
+  -- completes the queued action when the overworld regains control. Do not
+  -- move this call into a later core.update callback.
   local function useMove(game, move)
     local ow = game and game.overworld
 
-    -- These two older helpers are retained when present because v1.8 proved
-    -- them useful on builds that expose them.
+    -- These direct helpers are kept for CUT/SURF because they are the proven
+    -- Gold/Silver path used by the working releases of this mod.
     if ow and move == "CUT"
        and type(ow.useCutFieldMove) == "function"
        and type(ow.tryCut) == "function" then
@@ -79,10 +90,9 @@ return function(mod)
       end
     end
 
-    -- FLY is deliberately not mixed into the generic facade fallback.  If the
-    -- current engine exposes the internal native move, queue it after the Start
-    -- menu is gone (handled by the caller below).  Older builds may expose one
-    -- of these direct helpers instead.
+    -- FLY is handled separately below. Its destination UI is an internal
+    -- Gold/Silver screen and is not exposed through the generic field-action
+    -- facade on all supported Gen2 builds.
     if ow and move == "FLY" and type(ow.useFlyFieldMove) == "function" then
       return ow:useFlyFieldMove() == "ok"
     end
@@ -123,12 +133,13 @@ return function(mod)
           local move = item and item.value
           if not move or not ownsHM(game, move) then return end
 
-          -- ListMenu is the top state here.  Pop it first, exactly as v1.8 did.
+          -- The HM list is the top state. Close it first so the normal Start
+          -- menu remains underneath while the ordinary field action is queued.
           menu:close()
 
           if move == "FLY" then
-            -- FLY is special: the native World:useFieldMove path must see the
-            -- overworld, not a Start menu.  Pop Start first, then call it.
+            -- FLY is special: its native destination screen must be opened with
+            -- the overworld active, so remove Start before calling the Gen2 World.
             if game.stack and type(game.stack.pop) == "function" then
               game.stack:pop()
             end
@@ -136,7 +147,7 @@ return function(mod)
             return
           end
 
-          -- This is the critical v1.8 ordering:
+          -- Critical ordering for the ordinary HMs:
           --   1) close HM list
           --   2) invoke the working field-action facade
           --   3) close Start menu
@@ -173,5 +184,5 @@ return function(mod)
     return out
   end)
 
-  mod.log:info("HM Anywhere 2.4.0 loaded for Gold/Silver")
+  mod.log:info("HM Anywhere 2.8.1 loaded for Gold/Silver")
 end
