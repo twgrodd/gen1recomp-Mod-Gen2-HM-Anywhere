@@ -4,7 +4,7 @@ Use HM Moves without teaching them to a Pokemon.
 
 -AI Warning-
 Im not a coder, so this mod is fully AI "vibe coded".
-If anyone wants to fix up this code, use a branch or cpoy the code, anything that can improve this, your or any gen1recomp mod, please go ahead!
+If anyone wants to fix up this code, use a branch or copy the code, anything that can improve this, your or any gen1recomp mod, please go ahead!
 
 From my testing, this mods works fine, however you should use it with some caution.
 Testing have been done with other mods installed as well, such as running shoes, gen3 inspired UI and Exp share. works fine for me.
