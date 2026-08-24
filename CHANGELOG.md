@@ -1,4 +1,4 @@
-# HM Anywhere 1.0.0
+# HM Anywhere 2.7.0
 
 - Fixed FLY for Gen1Recomp++ 0.2.20 by using Game2's live `game.world` object.
 - FLY now invokes Gold/Silver's native `World:openFlyMap()` after the HM/START menus close.
