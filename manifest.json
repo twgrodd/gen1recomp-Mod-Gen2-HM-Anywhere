@@ -1,0 +1,15 @@
+{
+  "id": "hm_anywhere_gen2",
+  "name": "HM Anywhere (Gold / Silver)",
+  "version": "2.7.0",
+  "api": 2,
+  "entry": "main.lua",
+  "profile": "content",
+  "category": "MECHANIC",
+  "games": ["gold", "silver"],
+  "game_version": ">=0.2.0 <2.0.0 || =0.0.0-dev",
+  "priority": 610,
+  "permissions": ["engine_internals"],
+  "affects_link": false,
+  "description": "Use owned Gold/Silver HMs without teaching them to a Pokemon; contextual HM eligibility plus START -> HM menu."
+}
