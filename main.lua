@@ -1,11 +1,11 @@
--- HM Anywhere for Pokémon Gold / Silver v2.8.1
+-- HM Anywhere for Pokémon Gold, Silver & Crystal v2.9.0
 --
--- This mod adds an HM-only field-use menu for Gold/Silver. It deliberately
+-- This mod adds an HM-only field-use menu for the Gen 2 games. It deliberately
 -- does not teach moves, modify the party, or change battle moves. The normal
 -- Gold/Silver badge and map/terrain checks remain in charge.
 --
 -- The field-move execution order below is intentional and has been tested
--- against Gen1Recomp++ 0.2.24. The important ordering is:
+-- against Gen1Recomp++ 0.2.24 and newer Gen 2 builds. The important ordering is:
 --   HM list closes -> queue the native field action -> close Start menu.
 -- Do not move the field-action call to a later core.update: the Gen2 menu
 -- facade is the part that successfully queues the action while Start is open.
@@ -57,7 +57,9 @@ return function(mod)
   -- completes the queued action when the overworld regains control. Do not
   -- move this call into a later core.update callback.
   local function useMove(game, move)
-    local ow = game and game.overworld
+    -- Gen 2 owns the live overworld at game.world. Keep game.overworld as a
+    -- compatibility fallback for older Gold/Silver builds that exposed the alias.
+    local ow = game and (game.world or game.overworld)
 
     -- These direct helpers are kept for CUT/SURF because they are the proven
     -- Gold/Silver path used by the working releases of this mod.
@@ -91,8 +93,7 @@ return function(mod)
     end
 
     -- FLY is handled separately below. Its destination UI is an internal
-    -- Gold/Silver screen and is not exposed through the generic field-action
-    -- facade on all supported Gen2 builds.
+    -- Gen 2 screen and is not exposed through the generic field-action facade.
     if ow and move == "FLY" and type(ow.useFlyFieldMove) == "function" then
       return ow:useFlyFieldMove() == "ok"
     end
@@ -103,9 +104,9 @@ return function(mod)
     local ow = game and game.world
     if not ow then return false end
 
-    -- Current Gold/Silver native implementation: useFieldMove() creates the
+    -- Current Gen 2 native implementation: useFieldMove() creates the
     -- real FieldMoves.flyFromMenu result, and the overworld drains it once the
-    -- menus are gone.  This must be called only after Start is popped.
+    -- menus are gone. This must be called only after Start is popped.
     if type(ow.useFieldMove) == "function" then
       local result = ow:useFieldMove("FLY", syntheticMon("FLY"))
       return result and result.ok == true
@@ -184,5 +185,5 @@ return function(mod)
     return out
   end)
 
-  mod.log:info("HM Anywhere 2.8.1 loaded for Gold/Silver")
+  mod.log:info("HM Anywhere 2.9.0 loaded for Gen 2 (Gold/Silver/Crystal)")
 end
