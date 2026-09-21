@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.9.0 — Gen 2 / Crystal support
+
+- Added **Pokémon Crystal** support.
+- Changed the manifest target from individual Gold/Silver entries to `games: ["gen2"]`, which covers Gold, Silver, and Crystal.
+- The mod manager should now display the **GEN 2** game tag instead of **GOLD/SILVER**.
+- Changed the mod category from **GAMEPLAY** to **QOL**.
+- Renamed the launcher title to **HM Anywhere (Gen 2)**.
+- Updated compatibility to Gen1Recomp++ 0.2.24+.
+- Made the live Gen 2 world lookup prefer `game.world`, with the older `game.overworld` alias retained as a compatibility fallback.
+- Kept Pidgeot as the FLY animation source.
+- Kept the proven HM execution and contextual field-move behavior unchanged.
+
+
 ## 2.8.1 — Cleanup release
 
 - Kept the proven v2.8.0 gameplay implementation unchanged.
