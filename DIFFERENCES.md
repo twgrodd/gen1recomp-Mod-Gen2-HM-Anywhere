@@ -1,4 +1,4 @@
-# Differences from vanilla Gold / Silver
+# Differences from vanilla Gen 2
 
 HM Anywhere changes one gameplay rule:
 
@@ -10,8 +10,14 @@ The following vanilla rules remain in effect:
 - Environmental requirements are still required (for example, SURF requires suitable water and FLY requires a valid outdoor location).
 - The HM items remain normal Bag items.
 - Battle moves and party data are not modified.
-- The native Gold/Silver field-move effects, animations, map transitions, and Fly destinations are used.
+- The native Gen 2 field-move effects, animations, map transitions, and Fly destinations are used.
 
 The mod adds one UI element:
 
 - **START → HM**, containing the HMs currently owned by the player.
+
+Supported games:
+
+- Pokémon Gold
+- Pokémon Silver
+- Pokémon Crystal
